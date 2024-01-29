@@ -54,7 +54,7 @@ const App = () => {
   return (
     <>
       <div className="flex justify-center items-center w-full h-screen bg-gray-800">
-        <div className="text-center w-96 h-96  bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl overflow-auto">
+        <div className="text-center w-full h-full md:w-96 md:h-96   bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl overflow-auto">
           <form action="" onSubmit={handleSubmit}>
             <input
               className="border border-black rounded mt-6 p-2 mb-5 mr-5"
