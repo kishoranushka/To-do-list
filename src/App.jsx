@@ -7,6 +7,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "./db/firebase";
+
 const App = () => {
   const [newTask, setNewTask] = useState([]);
   const [data, setData] = useState("");
@@ -15,7 +16,6 @@ const App = () => {
     const readData = async () => {
       const collectionRef = collection(db, "task");
       const querySnapshot = await getDocs(collectionRef);
-      console.log(querySnapshot);
       const tasks = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -26,28 +26,25 @@ const App = () => {
     readData();
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setNewTask([data, ...newTask]);
-    const addFun = async () => {
-      try {
-        const docRef = await addDoc(collection(db, "task"), {
-          task: data,
-        });
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
-    };
-    addFun();
-    setData("");
+
+    try {
+      const docRef = await addDoc(collection(db, "task"), {
+        task: data,
+      });
+
+      const newTaskData = { id: docRef.id, task: data };
+      setNewTask((prevTasks) => [newTaskData, ...prevTasks]);
+      setData("");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   const handleDelete = async (taskId) => {
     try {
-      // Delete document from Firestore
       await deleteDoc(doc(db, "task", taskId));
-      // Update state to reflect the deletion
       setNewTask((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
     } catch (error) {
       console.error("Error deleting document: ", error);
